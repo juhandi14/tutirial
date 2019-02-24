@@ -1,0 +1,132 @@
+                                   
+                                   SELAMAT DATANG di CHANNEL
+
+                                        JUANSS OKE
+
+Disini saya akan mencoba mentutorial tentang menggabungkan table database menggunakan perintah JOIN
+
+
+Pertama kita membuat sebuah database dengan nama 'sewamobil'
+
+
+
+
+
+dan membuat beberapa tabel diantaranya :
+
+
+
+
+
+TABEL MOBIL
+dengan field di dalamnya yaitu:
+
++------+-------+-----------+---------+----------+
+| kode | jenis | merk      | tarif   | nopol    |
++------+-------+-----------+---------+----------+
+
+
+
+
+
+
+TABEL PELANGGAN
+dengan field di dalamnya yaitu :
+
++------+--------------+--------+------------------------+----------+---------+---------+
+| kode | nama         | kontak | alamat                 | kota     | kodepos | telepon |
++------+--------------+--------+------------------------+----------+---------+---------+
+
+
+
+
+
+
+TABEL SEWA 
+dengan field di dalamnya yaitu :
+
++--------------+---------------+------------+-----------+----------+----------+
+| nofaktursewa | kodepelanggan | tglsewa    | kodemobil | lamasewa | uangmuka |
++--------------+---------------+------------+-----------+----------+----------+
+
+
+
+
+
+
+
+dan isi data-data pada setiap tabel kira-kira seperti berikut!
+
+
+
+
+
+
+
+
+
+oke kita langsung ke bagaimana cara melakukan join pada tabel-tabel yang sudah kita buat tadi
+
+
+
+
+
+
+
+
+
+1. lakukan join terhadap tabel mobil dan sewa hingga menampilkan data seperti berikut :
+
+   select mobil.kode, mobil.jenis, mobil.merk, sewa.nofaktursewa, sewa.tglsewa, sewa.lamasewa FROM mobil
+-> left join sewa on mobil.kode = sewa.kodemobil;
++------+-------+-----------+--------------+------------+----------+----------+
+| kode | jenis | merk      | nofaktursewa | tglsewa    | lamasewa | uangmuka |
++------+-------+-----------+--------------+------------+----------+----------+
+| M001 | SEDAN | BMW E5    | F001         | 2008-12-01 | 2        | 200000   |
+| M003 | BUS   | MERCEDEZ  | F001         | 2008-12-01 | 2        | 200000   |
+| M002 | SEDAN | HONDA CRV | F003         | 2008-12-02 | 1        | 100000   |
+| M004 | BUS   | DYNA      | NULL         | NULL       | NULL     | NULL     |
+| M005 | TRUCK | HYNO ZX   | NULL         | NULL       | NULL     | NULL     |
+| M006 | TRUCK | DYNA X1   | NULL         | NULL       | NULL     | NULL     |
++------+-------+-----------+--------------+------------+----------+----------+
+
+
+2. lakukan join tabel sewa, pelanggan dan mobil sampai menampilkan data seperti berikut :
+   select
+    -> sewa.nofaktursewa,
+    -> pelanggan.nama,
+    -> sewa.tglsewa,
+    -> mobil.jenis,
+    -> mobil.merk,
+    -> sewa.lamasewa, sewa.uangmuka from sewa left join pelanggan on sewa.kodepelanggan = pelanggan.kode
+    -> left join mobil on sewa.kodemobil = mobil.kode;
+
++--------------+--------------+------------+-------+-----------+----------+----------+
+| nofaktursewa | nama         | tglsewa    | jenis | merk      | lamasewa | uangmuka |
++--------------+--------------+------------+-------+-----------+----------+----------+
+| F001         | PT FOX RIVER | 2008-12-01 | SEDAN | BMW E5    | 2        | 200000   |
+| F001         | PT FOX RIVER | 2008-12-01 | BUS   | MERCEDEZ  | 2        | 200000   |
+| F003         | CV FOXCON    | 2008-12-02 | SEDAN | HONDA CRV | 1        | 100000   |
++--------------+--------------+------------+-------+-----------+----------+----------+
+
+
+
+
+
+3. lakukan join tabel pelanggan dan tabel sewa hingga menampilkan data seperti berikut :
+   select pelanggan.nama, pelanggan.kota, sewa.nofaktursewa, sewa.tglsewa, sewa.kodemobil, sewa.lamasewa, sewa.uangmuka
+    -> from pelanggan
+    -> left join sewa on pelanggan.kode = sewa.kodepelanggan;
+
++--------------+----------+--------------+------------+-----------+----------+----------+
+| nama         | kota     | nofaktursewa | tglsewa    | kodemobil | lamasewa | uangmuka |
++--------------+----------+--------------+------------+-----------+----------+----------+
+| PT FOX RIVER | BENGKULU | F001         | 2008-12-01 | M001      | 2        | 200000   |
+| PT FOX RIVER | BENGKULU | F001         | 2008-12-01 | M003      | 2        | 200000   |
+| CV FOXCON    | JAKARTA  | F003         | 2008-12-02 | M002      | 1        | 100000   |
+| PT FARMACON  | LAMPUNG  | NULL         | NULL       | NULL      | NULL     | NULL     |
++--------------+----------+--------------+------------+-----------+----------+----------+
+
+
+
+
